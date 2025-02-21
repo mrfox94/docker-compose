@@ -1,0 +1,32 @@
+services:
+  db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: bookstack_db
+    restart: unless-stopped
+    networks:
+      - net
+    env_file:
+      - stack.env
+    volumes:
+      - bookstack_db:/config
+
+  app:
+    image: lscr.io/linuxserver/bookstack
+    container_name: bookstack
+    restart: unless-stopped
+    networks:
+      - net
+      - cloudflared_net
+    env_file:
+      - stack.env
+    volumes:
+      - bookstack:/config
+
+volumes:
+  bookstack:
+  bookstack_db:
+
+networks:
+  net:
+  cloudflared_net:
+    external: true
