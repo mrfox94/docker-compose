@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16
+    container_name: vaultwarden_db
+    restart: unless-stopped
+    networks:
+      - net
+    env_file:
+      - stack.env
+    volumes:
+      - vaultwarden_db:/var/lib/postgresql/data
+
+  app:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    networks:
+      - net
+      - cloudflared_net
+    env_file:
+      - stack.env
+    volumes:
+      - vaultwarden:/data
+
+volumes:
+  vaultwarden:
+  vaultwarden_db:
+
+networks:
+  net:
+  cloudflared_net:
+    external: true
